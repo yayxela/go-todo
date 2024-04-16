@@ -11,11 +11,12 @@ type DBConfig struct {
 }
 
 func (c DBConfig) GetConnectionString() string {
-	return fmt.Sprintf("mongodb://%s:%s@%s:%s/%s",
+	return fmt.Sprintf("mongodb://%s:%s@%s:%s/%s%s",
 		c.DBUser,
 		c.DBPassword,
 		c.DBHost,
 		c.DBPort,
 		c.DBName,
+		"?authSource=admin",
 	)
 }

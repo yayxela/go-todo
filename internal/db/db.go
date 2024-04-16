@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -25,8 +26,9 @@ type db struct {
 	dbName string
 }
 
-func New(ctx context.Context, config config.DBConfig) (IDB, error) {
-	co := options.Client().ApplyURI(config.GetConnectionString())
+func New(ctx context.Context, cfg config.DBConfig) (IDB, error) {
+	fmt.Println(cfg.GetConnectionString())
+	co := options.Client().ApplyURI(cfg.GetConnectionString())
 	client, err := mongo.Connect(ctx, co)
 	if err != nil {
 		return nil, err
@@ -37,7 +39,7 @@ func New(ctx context.Context, config config.DBConfig) (IDB, error) {
 	}
 	return &db{
 		Client: client,
-		dbName: config.DBName,
+		dbName: cfg.DBName,
 	}, nil
 }
 

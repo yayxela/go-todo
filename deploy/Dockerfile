@@ -1,8 +1,8 @@
-FROM golang:1.22.1-alpine as builder
+FROM golang:1.22.2-alpine as builder
 
 ARG SERVICE
 
-RUN apk update && apk add --no-cache bash curl
+RUN apk update && apk add --no-cache bash curl tzdata
 RUN apk add
 
 RUN mkdir /build
