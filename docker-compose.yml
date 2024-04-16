@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: todo-backend
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile
+      args:
+        - SERVICE=server
+    depends_on:
+      - db
+    volumes:
+      - ../files:/files
+    ports:
+      - "8080:8080"
+
+  db:
+    container_name: todo-db
+    image: mongo:6.0.4
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USER:-}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD:-}
+    volumes:
+      - mongodbdata:/data/db
+
+
+volumes:
+  mongodbdata:

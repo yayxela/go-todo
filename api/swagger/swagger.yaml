@@ -1,0 +1,142 @@
+definitions:
+  dto.CreateResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  dto.Task:
+    properties:
+      activeAt:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+    type: object
+  dto.TaskRequest:
+    properties:
+      activeAt:
+        type: string
+      title:
+        maxLength: 200
+        type: string
+    required:
+    - activeAt
+    - title
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/todo-list/tasks:
+    get:
+      consumes:
+      - application/json
+      description: Список задач по статусу
+      parameters:
+      - in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список записей
+          schema:
+            items:
+              $ref: '#/definitions/dto.Task'
+            type: array
+      summary: List
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      description: Создание новой задачи
+      parameters:
+      - description: Запрос на создание записи
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Новая запись
+          schema:
+            $ref: '#/definitions/dto.CreateResponse'
+        "404":
+          description: Not Found
+      summary: Create
+      tags:
+      - tasks
+  /api/v1/todo-list/tasks/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление задачи
+      parameters:
+      - description: ID задачи
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete
+      tags:
+      - tasks
+    put:
+      consumes:
+      - application/json
+      description: Обновление уже существующей задачи
+      parameters:
+      - description: ID задачи
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Запрос на обновление записи
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TaskRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Update
+      tags:
+      - tasks
+  /api/v1/todo-list/tasks/{id}/done:
+    put:
+      consumes:
+      - application/json
+      description: Пометить задачу выполненной
+      parameters:
+      - description: Document  id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Done
+      tags:
+      - tasks
+swagger: "2.0"

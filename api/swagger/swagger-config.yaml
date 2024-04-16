@@ -1,0 +1,4 @@
+swagger:
+  name: "Todo List"
+  version: "1.0.0"
+  description: "RESTful API микросервис Todo List"

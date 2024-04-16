@@ -1,0 +1,29 @@
+### GET Список задач
+GET http://localhost/api/v1/todo-list/tasks?status=
+Accept: application/json
+
+### POST Создать задачу
+POST http://localhost/api/v1/todo-list/tasks
+Content-Type: application/json
+
+{
+  "activeAt": "2024-04-16",
+  "title": "testing 2"
+}
+
+### PUT Обновить задачу
+PUT http://localhost/api/v1/todo-list/tasks/:id
+Content-Type: application/json
+
+{
+  "activeAt": "2024-04-17",
+  "title": "testing"
+}
+
+### PUT Завершить задачу
+PUT http://localhost/api/v1/todo-list/tasks/661ed6a066c2407a06663915/done
+Content-Type: application/json
+
+### PUT Удалить задачу
+DELETE http://localhost/api/v1/todo-list/tasks/661ed6a066c2407a06663915/done
+Content-Type: application/json
