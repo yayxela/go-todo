@@ -72,7 +72,7 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Новая запись",
                         "schema": {
                             "$ref": "#/definitions/dto.CreateResponse"

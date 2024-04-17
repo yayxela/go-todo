@@ -26,7 +26,7 @@ func RegisterHandlers(rg *gin.RouterGroup, todo TODO, validate validate.Validato
 // @Accept      json
 // @Produce     json
 // @Param       input     		body      	dto.CreateRequest		true    "Запрос на создание записи"
-// @Success     200          	{object}	dto.CreateResponse		"Новая запись"
+// @Success     201          	{object}	dto.CreateResponse		"Новая запись"
 // @Failure     404
 // @Router /api/v1/todo-list/tasks [post]
 func Create(todo TODO, validator validate.Validator) gin.HandlerFunc {
