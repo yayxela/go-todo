@@ -1,16 +1,19 @@
 package validate
 
 import (
-	"github.com/stretchr/testify/require"
-	"github.com/yayxela/go-todo/internal/dto"
-	"github.com/yayxela/go-todo/internal/values"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/yayxela/go-todo/internal/dto"
+	"github.com/yayxela/go-todo/internal/values"
 )
 
 func TestValidate_ValidateDate(t *testing.T) {
-	validator := New()
+	validator := New(WithDateRule())
 	cases := []struct {
 		name   string
 		input  dto.TaskRequest
@@ -56,7 +59,7 @@ func TestValidate_ValidateDate(t *testing.T) {
 }
 
 func TestValidate_ValidateTaskStatus(t *testing.T) {
-	validator := New()
+	validator := New(WithTaskStatusRule())
 	cases := []struct {
 		name   string
 		input  dto.ListRequest
@@ -84,6 +87,46 @@ func TestValidate_ValidateTaskStatus(t *testing.T) {
 			name:   "empty status",
 			input:  dto.ListRequest{},
 			result: true,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := validator.Validate(tc.input)
+			require.Equal(t, tc.result, err == nil)
+		})
+	}
+}
+
+func TestValidate_ValidateObjectID(t *testing.T) {
+	validator := New(WithObjectIDRule())
+	cases := []struct {
+		name   string
+		input  dto.GetByID
+		result bool
+	}{
+		{
+			name: "success request",
+			input: dto.GetByID{
+				ID: primitive.NewObjectID().Hex(),
+			},
+			result: true,
+		}, {
+			name: "success request",
+			input: dto.GetByID{
+				ID: "661f6efdb6ecc3459c7e9600",
+			},
+			result: true,
+		}, {
+			name: "not valid id",
+			input: dto.GetByID{
+				ID: "test",
+			},
+			result: false,
+		}, {
+			name:   "without id",
+			input:  dto.GetByID{},
+			result: false,
 		},
 	}
 

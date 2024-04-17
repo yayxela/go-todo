@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,11 +31,11 @@ func (m *middleware) Panic(c *gin.Context) {
 		var err error
 		switch t := r.(type) {
 		case string:
-			err = values.NewHttpError(http.StatusInternalServerError, t)
+			err = values.NewHTTPError(http.StatusInternalServerError, t)
 		case error:
-			err = values.NewHttpError(http.StatusInternalServerError, t.Error())
+			err = values.NewHTTPError(http.StatusInternalServerError, t.Error())
 		default:
-			err = values.NewHttpError(http.StatusInternalServerError, "api.unknown_err")
+			err = values.NewHTTPError(http.StatusInternalServerError, "api.unknown_err")
 		}
 		_ = c.Error(err)
 	}
@@ -52,26 +53,25 @@ func (m *middleware) Error(c *gin.Context) {
 	var statusCode int
 	errorResponse := make([]*dto.ErrorResponse, 0)
 	for _, err := range c.Errors {
-		var httpError *values.HttpError
+		var httpError *values.HTTPError
 		var validatorError validator.ValidationErrors
 
-		if errors.As(err, &httpError) {
-			// кастомные ошибки
+		switch {
+		case errors.As(err, &httpError): // кастомные ошибки
 			statusCode = httpError.Code()
 			m.log.Error(err)
-		} else if errors.As(err, &validatorError) {
-			// ошибки валидатора
+		case errors.As(err, &validatorError): // ошибки валидатора
 			for _, e := range validatorError {
 				errorResponse = append(errorResponse, &dto.ErrorResponse{
-					Message: e.Error(),
+					Message: fmt.Sprintf("failed validation for field '%s' on the '%s' tag", e.Field(), e.Tag()),
 					Field:   e.Field(),
 					Tag:     e.Tag(),
 				})
 			}
 			statusCode = http.StatusBadRequest
-		} else if errors.Is(err, mongo.ErrNoDocuments) {
+		case errors.Is(err, mongo.ErrNoDocuments):
 			statusCode = http.StatusNotFound
-		} else {
+		default:
 			statusCode = http.StatusInternalServerError
 			m.log.Error(err)
 		}

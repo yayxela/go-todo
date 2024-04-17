@@ -28,7 +28,10 @@ make docker-build
 
 ## Структура приложения
 
-```
+```text
+├── .env [конфиг приложения]
+├── .env.example [пример конфига]
+├── .golangci.yaml [конфиг линтера]
 ├── Makefile
 ├── README.md [<- вы здесь]
 ├── api
@@ -73,5 +76,6 @@ make docker-build
 │   └── values [статические данные]
 │       ├── dictionary.go
 │       └── errors.go
+├── report.xml [отчет линтера]
 └── requests.http [примеры запросов]
 ```

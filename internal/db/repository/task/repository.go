@@ -35,8 +35,8 @@ func New(idb db.IDB) Task {
 
 func (r *task) Create(ctx context.Context, model *models.Task) error {
 	filter := bson.D{
-		{"title", model.Title},
-		{"activeAt", primitive.NewDateTimeFromTime(model.ActiveAt)},
+		{Key: "title", Value: model.Title},
+		{Key: "activeAt", Value: primitive.NewDateTimeFromTime(model.ActiveAt)},
 	}
 	err := r.collection.FindOne(ctx, filter).Decode(bson.M{})
 	if !errors.Is(err, mongo.ErrNoDocuments) {
@@ -57,7 +57,7 @@ func (r *task) Create(ctx context.Context, model *models.Task) error {
 }
 
 func (r *task) Update(ctx context.Context, model *models.Task) error {
-	filter := bson.D{{"_id", model.ID}}
+	filter := bson.D{{Key: "_id", Value: model.ID}}
 	var update bson.D
 	if model.Title != "" {
 		update = append(update, bson.E{Key: "title", Value: model.Title})
@@ -68,12 +68,12 @@ func (r *task) Update(ctx context.Context, model *models.Task) error {
 	if model.Status != values.None {
 		update = append(update, bson.E{Key: "status", Value: model.Status})
 	}
-	err := r.collection.FindOneAndUpdate(ctx, filter, bson.D{{"$set", update}}).Err()
+	err := r.collection.FindOneAndUpdate(ctx, filter, bson.D{{Key: "$set", Value: update}}).Err()
 	return err
 }
 
 func (r *task) Delete(ctx context.Context, id string) error {
-	filter := bson.D{{"_id", db.GetOID(id)}}
+	filter := bson.D{{Key: "_id", Value: db.GetOID(id)}}
 	return r.collection.FindOneAndDelete(ctx, filter).Err()
 }
 
@@ -88,7 +88,7 @@ func (r *task) List(ctx context.Context, req *dto.ListRequest) ([]*models.Task, 
 		filter["activeAt"] = bson.M{"$lte": primitive.NewDateTimeFromTime(time.Now())}
 	}
 	opts := []*options.FindOptions{
-		options.Find().SetSort(bson.D{{"createdAt", -1}}),
+		options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}}),
 	}
 	cursor, err := r.collection.Find(ctx, filter, opts...)
 	if err != nil {

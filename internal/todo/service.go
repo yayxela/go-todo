@@ -12,10 +12,10 @@ import (
 )
 
 type TODO interface {
-	Create(ctx context.Context, request *dto.TaskRequest) (*dto.CreateResponse, error)
-	Update(ctx context.Context, request *dto.TaskRequest) error
-	Delete(ctx context.Context, id string) error
-	Done(ctx context.Context, id string) error
+	Create(ctx context.Context, request *dto.CreateRequest) (*dto.CreateResponse, error)
+	Update(ctx context.Context, request *dto.UpdateRequest) error
+	Delete(ctx context.Context, request *dto.GetByID) error
+	Done(ctx context.Context, request *dto.GetByID) error
 	List(ctx context.Context, request *dto.ListRequest) (dto.ListResponse, error)
 }
 
@@ -29,7 +29,7 @@ func New(idb db.IDB) TODO {
 	}
 }
 
-func (s *service) Create(ctx context.Context, request *dto.TaskRequest) (*dto.CreateResponse, error) {
+func (s *service) Create(ctx context.Context, request *dto.CreateRequest) (*dto.CreateResponse, error) {
 	task := &models.Task{
 		Title:    request.Title,
 		ActiveAt: request.GetActiveAt(),
@@ -43,7 +43,7 @@ func (s *service) Create(ctx context.Context, request *dto.TaskRequest) (*dto.Cr
 	}, nil
 }
 
-func (s *service) Update(ctx context.Context, request *dto.TaskRequest) error {
+func (s *service) Update(ctx context.Context, request *dto.UpdateRequest) error {
 	task := &models.Task{
 		ID:       db.GetOID(request.ID),
 		Title:    request.Title,
@@ -52,13 +52,13 @@ func (s *service) Update(ctx context.Context, request *dto.TaskRequest) error {
 	return s.taskRepo.Update(ctx, task)
 }
 
-func (s *service) Delete(ctx context.Context, id string) error {
-	return s.taskRepo.Delete(ctx, id)
+func (s *service) Delete(ctx context.Context, request *dto.GetByID) error {
+	return s.taskRepo.Delete(ctx, request.ID)
 }
 
-func (s *service) Done(ctx context.Context, id string) error {
+func (s *service) Done(ctx context.Context, request *dto.GetByID) error {
 	task := &models.Task{
-		ID:     db.GetOID(id),
+		ID:     db.GetOID(request.ID),
 		Status: values.Done,
 	}
 	return s.taskRepo.Update(ctx, task)

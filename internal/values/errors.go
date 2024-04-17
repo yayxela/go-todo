@@ -5,30 +5,30 @@ import (
 	"net/http"
 )
 
-type HttpError struct {
+type HTTPError struct {
 	code    int
 	message string
 }
 
-func NewHttpError(code int, message string) *HttpError {
-	return &HttpError{
+func NewHTTPError(code int, message string) *HTTPError {
+	return &HTTPError{
 		code:    code,
 		message: message,
 	}
 }
 
-func (h *HttpError) Error() string {
+func (h *HTTPError) Error() string {
 	return fmt.Sprintf("http err. code:%d msg:%s", h.code, h.message)
 }
 
-func (h *HttpError) Code() int {
+func (h *HTTPError) Code() int {
 	return h.code
 }
 
-func (h *HttpError) Message() string {
+func (h *HTTPError) Message() string {
 	return h.message
 }
 
 var (
-	ExistsError = NewHttpError(http.StatusNotFound, "api.exists_error")
+	ExistsError = NewHTTPError(http.StatusNotFound, "api.exists_error")
 )

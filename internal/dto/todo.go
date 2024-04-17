@@ -5,9 +5,21 @@ import (
 )
 
 type TaskRequest struct {
-	ID       string `json:"-"`
 	Title    string `json:"title" validate:"required,max=200"`
 	ActiveAt string `json:"activeAt" validate:"required,date"`
+}
+
+type CreateRequest struct {
+	TaskRequest
+}
+
+type GetByID struct {
+	ID string `name:"id" json:"-" validate:"required,object-id"`
+}
+
+type UpdateRequest struct {
+	GetByID
+	TaskRequest
 }
 
 // GetActiveAt ,,,

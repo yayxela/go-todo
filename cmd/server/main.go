@@ -21,13 +21,12 @@ import (
 	"github.com/yayxela/go-todo/internal/validate"
 )
 
-func main() {
+func main() { //nolint: funlen
 	// создание нового логгера
 	log, err := logger.New()
 	if err != nil {
 		panic(err)
 	}
-	defer func() { _ = log.Sync() }()
 
 	// создание нового конфига
 	cfg, err := config.New()
@@ -50,7 +49,7 @@ func main() {
 	swagger.SwaggerInfo.BasePath = cfg.AppConfig.BasePath
 
 	// создание нового кастомного валидатора
-	validator := validate.New()
+	validator := validate.Default()
 
 	// новое подключение е бд
 	ctx := context.Background()
@@ -78,18 +77,19 @@ func main() {
 	}
 	go func() {
 		if err = server.Run(); err != nil {
-			log.Errorf("error: %s\n", err)
+			log.Fatalf("server-error: %s\n", err)
 		}
 	}()
 
 	// graceful shutdown
-	done := make(chan os.Signal)
+	done := make(chan os.Signal, 1)
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
 	<-done
 	log.Info("Shutting down server...")
 
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second) //nolint:gomnd
 	defer cancel()
 	_ = idb.Disconnect(ctx)
+	_ = log.Sync()
 	log.Info("Server exiting")
 }

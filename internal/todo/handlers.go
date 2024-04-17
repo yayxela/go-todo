@@ -14,8 +14,8 @@ func RegisterHandlers(rg *gin.RouterGroup, todo TODO, validate validate.Validato
 	group := rg.Group("/todo-list/tasks")
 	group.POST("", Create(todo, validate))
 	group.PUT("/:id", Update(todo, validate))
-	group.DELETE("/:id", Delete(todo))
-	group.PUT("/:id/done", Done(todo))
+	group.DELETE("/:id", Delete(todo, validate))
+	group.PUT("/:id/done", Done(todo, validate))
 	group.GET("", List(todo, validate))
 }
 
@@ -25,13 +25,13 @@ func RegisterHandlers(rg *gin.RouterGroup, todo TODO, validate validate.Validato
 // @Tags 		tasks
 // @Accept      json
 // @Produce     json
-// @Param       input     		body      	dto.TaskRequest			true    "Запрос на создание записи"
+// @Param       input     		body      	dto.CreateRequest		true    "Запрос на создание записи"
 // @Success     200          	{object}	dto.CreateResponse		"Новая запись"
 // @Failure     404
 // @Router /api/v1/todo-list/tasks [post]
 func Create(todo TODO, validator validate.Validator) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		request := new(dto.TaskRequest)
+		request := new(dto.CreateRequest)
 		if err := ctx.Bind(request); err != nil {
 			_ = ctx.Error(err)
 			return
@@ -55,15 +55,17 @@ func Create(todo TODO, validator validate.Validator) gin.HandlerFunc {
 // @Tags 		tasks
 // @Accept      json
 // @Produce     json
-// @Param 		id		path	string			true	"ID задачи"
-// @Param       input	body	dto.TaskRequest	true    "Запрос на обновление записи"
+// @Param 		id		path	string				true	"ID задачи"
+// @Param       input	body	dto.UpdateRequest	true    "Запрос на обновление записи"
 // @Success     204
 // @Failure     404
 // @Router /api/v1/todo-list/tasks/{id} [put]
 func Update(todo TODO, validator validate.Validator) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		request := &dto.TaskRequest{
-			ID: ctx.Param(values.ID),
+		request := &dto.UpdateRequest{
+			GetByID: dto.GetByID{
+				ID: ctx.Param(values.ID),
+			},
 		}
 
 		if err := ctx.Bind(request); err != nil {
@@ -93,10 +95,16 @@ func Update(todo TODO, validator validate.Validator) gin.HandlerFunc {
 // @Success     204
 // @Failure     404
 // @Router /api/v1/todo-list/tasks/{id} [delete]
-func Delete(todo TODO) gin.HandlerFunc {
+func Delete(todo TODO, validator validate.Validator) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id := ctx.Param(values.ID)
-		err := todo.Delete(ctx, id)
+		request := &dto.GetByID{
+			ID: ctx.Param(values.ID),
+		}
+		if err := validator.Validate(request); err != nil {
+			_ = ctx.Error(err)
+			return
+		}
+		err := todo.Delete(ctx, request)
 		if err != nil {
 			_ = ctx.Error(err)
 			return
@@ -115,10 +123,16 @@ func Delete(todo TODO) gin.HandlerFunc {
 // @Success     204
 // @Failure     404
 // @Router /api/v1/todo-list/tasks/{id}/done [put]
-func Done(todo TODO) gin.HandlerFunc {
+func Done(todo TODO, validator validate.Validator) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id := ctx.Param(values.ID)
-		err := todo.Done(ctx, id)
+		request := &dto.GetByID{
+			ID: ctx.Param(values.ID),
+		}
+		if err := validator.Validate(request); err != nil {
+			_ = ctx.Error(err)
+			return
+		}
+		err := todo.Done(ctx, request)
 		if err != nil {
 			_ = ctx.Error(err)
 			return
