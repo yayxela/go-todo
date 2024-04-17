@@ -2,6 +2,7 @@ package todo
 
 import (
 	"context"
+	"github.com/yayxela/go-todo/internal/utils"
 	"time"
 
 	"github.com/yayxela/go-todo/internal/db"
@@ -32,7 +33,7 @@ func New(idb db.IDB) TODO {
 func (s *service) Create(ctx context.Context, request *dto.CreateRequest) (*dto.CreateResponse, error) {
 	task := &models.Task{
 		Title:    request.Title,
-		ActiveAt: request.GetActiveAt(),
+		ActiveAt: utils.GetActiveAt(request.ActiveAt),
 	}
 	err := s.taskRepo.Create(ctx, task)
 	if err != nil {
@@ -45,9 +46,9 @@ func (s *service) Create(ctx context.Context, request *dto.CreateRequest) (*dto.
 
 func (s *service) Update(ctx context.Context, request *dto.UpdateRequest) error {
 	task := &models.Task{
-		ID:       db.GetOID(request.ID),
+		ID:       utils.GetOID(request.ID),
 		Title:    request.Title,
-		ActiveAt: request.GetActiveAt(),
+		ActiveAt: utils.GetActiveAt(request.ActiveAt),
 	}
 	return s.taskRepo.Update(ctx, task)
 }
@@ -58,7 +59,7 @@ func (s *service) Delete(ctx context.Context, request *dto.GetByID) error {
 
 func (s *service) Done(ctx context.Context, request *dto.GetByID) error {
 	task := &models.Task{
-		ID:     db.GetOID(request.ID),
+		ID:     utils.GetOID(request.ID),
 		Status: values.Done,
 	}
 	return s.taskRepo.Update(ctx, task)

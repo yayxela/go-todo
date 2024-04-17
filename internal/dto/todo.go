@@ -1,9 +1,5 @@
 package dto
 
-import (
-	"time"
-)
-
 type TaskRequest struct {
 	Title    string `json:"title" validate:"required,max=200"`
 	ActiveAt string `json:"activeAt" validate:"required,date"`
@@ -20,14 +16,6 @@ type GetByID struct {
 type UpdateRequest struct {
 	GetByID
 	TaskRequest
-}
-
-// GetActiveAt ,,,
-// Получение даты задачи в таймзоне
-func (r *TaskRequest) GetActiveAt() time.Time {
-	t, _ := time.Parse(time.DateOnly, r.ActiveAt)
-	y, m, d := t.Date()
-	return time.Date(y, m, d, 0, 0, 0, 0, time.Local)
 }
 
 type CreateResponse struct {

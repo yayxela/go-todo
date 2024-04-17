@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -51,11 +50,4 @@ func (d *db) GetDB() *mongo.Database {
 
 func (d *db) Disconnect(ctx context.Context) error {
 	return d.Client.Disconnect(ctx)
-}
-
-// GetOID ...
-// Получение primitive.ObjectID из строки
-func GetOID(id string) primitive.ObjectID {
-	oid, _ := primitive.ObjectIDFromHex(id)
-	return oid
 }

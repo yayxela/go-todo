@@ -3,6 +3,7 @@ package task
 import (
 	"context"
 	"errors"
+	"github.com/yayxela/go-todo/internal/utils"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -73,7 +74,7 @@ func (r *task) Update(ctx context.Context, model *models.Task) error {
 }
 
 func (r *task) Delete(ctx context.Context, id string) error {
-	filter := bson.D{{Key: "_id", Value: db.GetOID(id)}}
+	filter := bson.D{{Key: "_id", Value: utils.GetOID(id)}}
 	return r.collection.FindOneAndDelete(ctx, filter).Err()
 }
 
