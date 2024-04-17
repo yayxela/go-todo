@@ -3,7 +3,6 @@ package task
 import (
 	"context"
 	"errors"
-	"github.com/yayxela/go-todo/internal/utils"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -14,6 +13,7 @@ import (
 	"github.com/yayxela/go-todo/internal/db"
 	"github.com/yayxela/go-todo/internal/db/models"
 	"github.com/yayxela/go-todo/internal/dto"
+	"github.com/yayxela/go-todo/internal/utils"
 	"github.com/yayxela/go-todo/internal/values"
 )
 

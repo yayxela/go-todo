@@ -2,13 +2,13 @@ package todo
 
 import (
 	"context"
-	"github.com/yayxela/go-todo/internal/utils"
 	"time"
 
 	"github.com/yayxela/go-todo/internal/db"
 	"github.com/yayxela/go-todo/internal/db/models"
 	taskRepo "github.com/yayxela/go-todo/internal/db/repository/task"
 	"github.com/yayxela/go-todo/internal/dto"
+	"github.com/yayxela/go-todo/internal/utils"
 	"github.com/yayxela/go-todo/internal/values"
 )
 

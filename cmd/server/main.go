@@ -54,7 +54,7 @@ func main() { //nolint: funlen
 	// создание нового кастомного валидатора
 	validator := validate.Default()
 
-	// новое подключение е бд
+	// новое подключение к бд
 	ctx := context.Background()
 	idb, err := db.New(ctx, cfg.DBConfig)
 	if err != nil {
@@ -74,7 +74,7 @@ func main() { //nolint: funlen
 	todoService := todo.New(idb)
 	todo.RegisterHandlers(v1, todoService, validator)
 
-	// запуск севера
+	// запуск веб-сервера
 	if err = server.Run(cfg.AppConfig.Port); err != nil {
 		log.Fatal(err)
 	}
