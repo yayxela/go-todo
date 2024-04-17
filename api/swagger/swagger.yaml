@@ -1,4 +1,15 @@
 definitions:
+  dto.CreateRequest:
+    properties:
+      activeAt:
+        type: string
+      title:
+        maxLength: 200
+        type: string
+    required:
+    - activeAt
+    - title
+    type: object
   dto.CreateResponse:
     properties:
       id:
@@ -13,7 +24,7 @@ definitions:
       title:
         type: string
     type: object
-  dto.TaskRequest:
+  dto.UpdateRequest:
     properties:
       activeAt:
         type: string
@@ -26,6 +37,9 @@ definitions:
     type: object
 info:
   contact: {}
+  description: description placeholder.
+  title: title placeholder
+  version: "1.0"
 paths:
   /api/v1/todo-list/tasks:
     get:
@@ -58,7 +72,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/dto.TaskRequest'
+          $ref: '#/definitions/dto.CreateRequest'
       produces:
       - application/json
       responses:
@@ -107,7 +121,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/dto.TaskRequest'
+          $ref: '#/definitions/dto.UpdateRequest'
       produces:
       - application/json
       responses:

@@ -21,6 +21,9 @@ import (
 	"github.com/yayxela/go-todo/internal/validate"
 )
 
+// @title           title placeholder
+// @version         1.0
+// @description     description placeholder.
 func main() { //nolint: funlen
 	// создание нового логгера
 	log, err := logger.New()

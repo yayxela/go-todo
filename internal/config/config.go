@@ -7,7 +7,7 @@ import (
 type Config struct {
 	AppConfig     AppConfig     `mapstructure:",squash"`
 	DBConfig      DBConfig      `mapstructure:",squash"`
-	SwaggerConfig SwaggerConfig `yaml:"swagger"`
+	SwaggerConfig SwaggerConfig `mapstructure:"swagger"`
 }
 
 // New ...
@@ -22,7 +22,8 @@ func New() (*Config, error) {
 	if err := viper.Unmarshal(&config); err != nil {
 		return nil, err
 	}
-	viper.AddConfigPath("./api/swagger/swagger-config.yaml")
+
+	viper.SetConfigFile("./api/swagger/swagger-config.yaml")
 	if err := viper.MergeInConfig(); err != nil {
 		return nil, err
 	}

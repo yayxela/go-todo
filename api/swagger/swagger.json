@@ -1,7 +1,10 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "description placeholder.",
+        "title": "title placeholder",
+        "contact": {},
+        "version": "1.0"
     },
     "paths": {
         "/api/v1/todo-list/tasks": {
@@ -55,7 +58,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.TaskRequest"
+                            "$ref": "#/definitions/dto.CreateRequest"
                         }
                     }
                 ],
@@ -99,7 +102,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.TaskRequest"
+                            "$ref": "#/definitions/dto.UpdateRequest"
                         }
                     }
                 ],
@@ -177,6 +180,22 @@
         }
     },
     "definitions": {
+        "dto.CreateRequest": {
+            "type": "object",
+            "required": [
+                "activeAt",
+                "title"
+            ],
+            "properties": {
+                "activeAt": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 200
+                }
+            }
+        },
         "dto.CreateResponse": {
             "type": "object",
             "properties": {
@@ -199,7 +218,7 @@
                 }
             }
         },
-        "dto.TaskRequest": {
+        "dto.UpdateRequest": {
             "type": "object",
             "required": [
                 "activeAt",

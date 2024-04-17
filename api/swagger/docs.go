@@ -67,7 +67,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.TaskRequest"
+                            "$ref": "#/definitions/dto.CreateRequest"
                         }
                     }
                 ],
@@ -111,7 +111,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.TaskRequest"
+                            "$ref": "#/definitions/dto.UpdateRequest"
                         }
                     }
                 ],
@@ -189,6 +189,22 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.CreateRequest": {
+            "type": "object",
+            "required": [
+                "activeAt",
+                "title"
+            ],
+            "properties": {
+                "activeAt": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 200
+                }
+            }
+        },
         "dto.CreateResponse": {
             "type": "object",
             "properties": {
@@ -211,7 +227,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.TaskRequest": {
+        "dto.UpdateRequest": {
             "type": "object",
             "required": [
                 "activeAt",
@@ -232,12 +248,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "1.0",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "title placeholder",
+	Description:      "description placeholder.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

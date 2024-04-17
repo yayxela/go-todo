@@ -16,6 +16,6 @@ RUN go build -o bin/main ./cmd/$SERVICE
 FROM alpine:latest
 COPY --from=builder /build/bin /bin/
 COPY --from=builder /build/.env .
-COPY --from=builder /build/api/swagger/swagger-config.yaml .
+COPY --from=builder /build/api/swagger/swagger-config.yaml /api/swagger/
 
 ENTRYPOINT ["/bin/main"]
