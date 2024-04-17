@@ -71,6 +71,8 @@ make docker-build
 │   ├── todo [сервис задач]
 │   │   ├── handlers.go
 │   │   └── service.go
+│   ├── utils [вспомагательные методы]
+│   │   └── converter.go
 │   ├── validate [валидатор]
 │   │   └── validate.go
 │   └── values [статические данные]
