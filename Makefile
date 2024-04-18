@@ -13,7 +13,7 @@ SERVER = $(PROJECT_BIN)/server
 
 .PHONY: lint
 lint: .install-linter
-	$(GOLANGCI_LINT) run ./... --config=./.golangci.yaml
+	$(GOLANGCI_LINT) run $(PROJECT_DIR)/... --config=$(PROJECT_DIR)/.golangci.yaml --new-from-rev HEAD --fix
 
 .PHONY swagger:
 swagger:
